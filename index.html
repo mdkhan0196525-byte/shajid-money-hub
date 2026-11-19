@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shajid Money Hub</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+body {
+  margin: 0;
+  padding: 25px 18px;
+  background: #102b25;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+.card {
+  background: #1b4035;
+  padding: 25px;
+  border-radius: 18px;
+  margin-top: 35px;
+}
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #20c477;
+  color: white;
+  font-size: 16px;
+  margin-top: 15px;
+}
+</style>
+</head>
+<body>
+
+<h1>Shajid Money Hub</h1>
+<p>Earn • Learn • Grow</p>
+
+<div class="card">
+<h2>Welcome!</h2>
+<p>Welcome to Online Earning Community</p>
+<button onclick="joinGroup()">Join Telegram Group</button>
+<p id="message"></p>
+</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
+
+function joinGroup() {
+  document.getElementById("message").innerText =
+  "Group link will be added soon.";
+}
+</script>
+
+</body>
+</html>
+
+HTML
