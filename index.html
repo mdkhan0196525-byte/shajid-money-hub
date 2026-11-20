@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,6 +31,12 @@ button {
   font-size: 16px;
   margin-top: 15px;
 }
+#mainApp {
+  display: none;
+}
+#message {
+  margin-top: 15px;
+}
 </style>
 </head>
 <body>
@@ -37,11 +44,20 @@ button {
 <h1>Shajid Money Hub</h1>
 <p>Earn • Learn • Grow</p>
 
-<div class="card">
-<h2>Welcome!</h2>
-<p>Welcome to Online Earning Community</p>
-<button onclick="joinGroup()">Join Telegram Group</button>
-<p id="message"></p>
+<div class="card" id="joinCard">
+  <h2>Welcome!</h2>
+  <p>অ্যাপ ব্যবহার করতে আগে আমাদের গ্রুপে Join করো।</p>
+
+  <button onclick="joinGroup()">👥 Join Telegram Group</button>
+  <button onclick="verifyMembership()">✅ Verify Membership</button>
+
+  <p id="message"></p>
+</div>
+
+<div class="card" id="mainApp">
+  <h2>🎉 Welcome to Shajid Money Hub!</h2>
+  <p>তোমার গ্রুপের সদস্যতা যাচাই হয়েছে।</p>
+  <p>মূল অ্যাপের কাজ এখানে যোগ করা হবে।</p>
 </div>
 
 <script>
@@ -49,16 +65,53 @@ const tg = window.Telegram.WebApp;
 tg.ready();
 tg.expand();
 
-function joinGroup() {
-  window.open(
-    "https://t.me/OnlineEarningAlltime4t4",
-    "_blank"
-  );
+const API_URL = "https://shajidmoneyhubbot-2.onrender.com/verify";
 
+function joinGroup() {
+  tg.openTelegramLink("https://t.me/OnlineEarningAlltime4t4");
+}
+
+async function verifyMembership() {
+  const message = document.getElementById("message");
+  const button = document.querySelectorAll("button")[1];
+
+  if (!tg.initData) {
+    message.textContent = "Telegram-এর ভিতর থেকে Mini App খুলুন।";
+    return;
+  }
+
+  button.disabled = true;
+  message.textContent = "Checking membership...";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        initData: tg.initData
+      })
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.joined) {
+      document.getElementById("joinCard").style.display = "none";
+      document.getElementById("mainApp").style.display = "block";
+    } else if (response.ok && !result.joined) {
+      message.textContent = "তুমি এখনো গ্রুপে Join করোনি। আগে Join করো।";
+    } else {
+      message.textContent = "যাচাই করা যায়নি। আবার চেষ্টা করো।";
+    }
+
+  } catch (error) {
+    message.textContent = "সার্ভারের সাথে সংযোগ হচ্ছে না। একটু পরে চেষ্টা করো।";
+  }
+
+  button.disabled = false;
 }
 </script>
 
 </body>
 </html>
-
-HTML
