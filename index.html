@@ -1,63 +1,247 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shajid Money Hub</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  padding: 25px 18px;
+  padding: 18px;
   background: #102b25;
   color: white;
   font-family: Arial, sans-serif;
-  text-align: center;
 }
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+h1 {
+  font-size: 23px;
+  margin: 0;
+}
+
+.profile {
+  background: #1b4035;
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+
 .card {
   background: #1b4035;
-  padding: 25px;
-  border-radius: 18px;
-  margin-top: 35px;
+  padding: 20px;
+  border-radius: 17px;
+  margin-bottom: 16px;
 }
+
+.balance {
+  background: linear-gradient(135deg, #168c60, #20c477);
+}
+
+.balance h2 {
+  font-size: 17px;
+}
+
+.amount {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.stat {
+  background: #245344;
+  padding: 16px;
+  border-radius: 13px;
+}
+
+.stat h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.stat p {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
 button {
   width: 100%;
-  padding: 15px;
+  padding: 14px;
   border: none;
   border-radius: 10px;
   background: #20c477;
   color: white;
-  font-size: 16px;
-  margin-top: 15px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 12px;
 }
-#mainApp {
+
+button:disabled {
+  opacity: 0.6;
+}
+
+.task {
+  background: #245344;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 12px;
+}
+
+.task p {
+  margin: 5px 0;
+}
+
+nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 15px 0;
+}
+
+nav button {
+  background: #245344;
+  font-size: 12px;
+  margin: 0;
+}
+
+nav button.active {
+  background: #20c477;
+}
+
+.page {
   display: none;
 }
-#message {
-  margin-top: 15px;
+
+.page.active {
+  display: block;
+}
+
+#joinCard {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.small {
+  color: #c3d8ce;
+  font-size: 12px;
 }
 </style>
 </head>
+
 <body>
 
-<h1>Shajid Money Hub</h1>
-<p>Earn • Learn • Grow</p>
+<header>
+  <h1>💚 Shajid Money Hub</h1>
+  <div class="profile">👤 Profile</div>
+</header>
 
 <div class="card" id="joinCard">
   <h2>Welcome!</h2>
   <p>অ্যাপ ব্যবহার করতে আগে আমাদের গ্রুপে Join করো।</p>
-
   <button onclick="joinGroup()">👥 Join Telegram Group</button>
-  <button onclick="verifyMembership()">✅ Verify Membership</button>
-
+  <button id="verifyButton" onclick="verifyMembership()">
+    ✅ Verify Membership
+  </button>
   <p id="message"></p>
 </div>
 
-<div class="card" id="mainApp">
-  <h2>🎉 Welcome to Shajid Money Hub!</h2>
-  <p>তোমার গ্রুপের সদস্যতা যাচাই হয়েছে।</p>
-  <p>মূল অ্যাপের কাজ এখানে যোগ করা হবে।</p>
+<div id="mainApp" style="display:none;">
+
+<nav>
+  <button class="active" onclick="showPage('home',this)">🏠 Home</button>
+  <button onclick="showPage('tasks',this)">📋 Tasks</button>
+  <button onclick="showPage('profilePage',this)">👤 Profile</button>
+</nav>
+
+<section class="page active" id="home">
+
+  <div class="card balance">
+    <h2>💰 Demo Balance</h2>
+    <div class="amount" id="balance">0 Points</div>
+    <p>এটি শুধু পরীক্ষামূলক পয়েন্ট, টাকা নয়।</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <h3>⭐ Total Points</h3>
+      <p id="points">0</p>
+    </div>
+
+    <div class="stat">
+      <h3>📋 Completed Tasks</h3>
+      <p id="completed">0</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📢 Announcement</h2>
+    <p>Shajid Money Hub-এ স্বাগতম!</p>
+    <p class="small">নতুন আপডেট এখানে দেখানো হবে।</p>
+  </div>
+
+  <div class="card">
+    <h2>📜 Transaction History</h2>
+    <p>এখনো কোনো ডেমো লেনদেন নেই।</p>
+  </div>
+
+</section>
+
+<section class="page" id="tasks">
+  <div class="card">
+    <h2>📋 Daily Tasks</h2>
+    <p>নিচের শেখার কাজগুলো সম্পন্ন করো।</p>
+
+    <div class="task">
+      <p>📖 Task 1: অ্যাপের নিয়ম পড়ুন</p>
+      <button onclick="completeTask(this)">Completed</button>
+    </div>
+
+    <div class="task">
+      <p>🔐 Task 2: অনলাইন নিরাপত্তা শিখুন</p>
+      <button onclick="completeTask(this)">Completed</button>
+    </div>
+
+    <div class="task">
+      <p>📚 Task 3: Telegram Bot সম্পর্কে জানুন</p>
+      <button onclick="completeTask(this)">Completed</button>
+    </div>
+
+    <p class="small">এগুলো ডেমো কাজ। কোনো আর্থিক পুরস্কার নেই।</p>
+  </div>
+</section>
+
+<section class="page" id="profilePage">
+  <div class="card">
+    <h2>👤 My Profile</h2>
+    <p id="username">Telegram User</p>
+    <p id="userId">User ID: Loading...</p>
+    <p>Account Status: Verified</p>
+  </div>
+
+  <div class="card">
+    <h2>👥 Referral</h2>
+    <p>Referral System ভবিষ্যতে যোগ করা হবে।</p>
+  </div>
+</section>
+
 </div>
 
 <script>
@@ -65,18 +249,22 @@ const tg = window.Telegram.WebApp;
 tg.ready();
 tg.expand();
 
-const API_URL = "https://shajidmoneyhubbot-2.onrender.com/verify";
+const API_URL =
+"https://shajidmoneyhubbot-2.onrender.com/verify";
 
 function joinGroup() {
-  tg.openTelegramLink("https://t.me/OnlineEarningAlltime4t4");
+  tg.openTelegramLink(
+    "https://t.me/OnlineEarningAlltime4t4"
+  );
 }
 
 async function verifyMembership() {
   const message = document.getElementById("message");
-  const button = document.querySelectorAll("button")[1];
+  const button = document.getElementById("verifyButton");
 
   if (!tg.initData) {
-    message.textContent = "Telegram-এর ভিতর থেকে Mini App খুলুন।";
+    message.textContent =
+      "Telegram-এর ভিতর থেকে Mini App খুলুন।";
     return;
   }
 
@@ -99,17 +287,63 @@ async function verifyMembership() {
     if (response.ok && result.joined) {
       document.getElementById("joinCard").style.display = "none";
       document.getElementById("mainApp").style.display = "block";
-    } else if (response.ok && !result.joined) {
-      message.textContent = "তুমি এখনো গ্রুপে Join করোনি। আগে Join করো।";
+
+      const user = tg.initDataUnsafe.user;
+
+      if (user) {
+        document.getElementById("username").textContent =
+          "Name: " + (user.first_name || "Telegram User");
+
+        document.getElementById("userId").textContent =
+          "User ID: " + user.id;
+      }
+
+    } else if (response.ok) {
+      message.textContent =
+        "তুমি এখনো গ্রুপে Join করোনি। আগে Join করো।";
     } else {
-      message.textContent = "যাচাই করা যায়নি। আবার চেষ্টা করো।";
+      message.textContent =
+        "যাচাই করা যায়নি। আবার চেষ্টা করো।";
     }
 
   } catch (error) {
-    message.textContent = "সার্ভারের সাথে সংযোগ হচ্ছে না। একটু পরে চেষ্টা করো।";
+    message.textContent =
+      "সার্ভারের সাথে সংযোগ হচ্ছে না। আবার চেষ্টা করো।";
   }
 
   button.disabled = false;
+}
+
+function showPage(pageId, button) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.remove("active");
+  });
+
+  document.getElementById(pageId).classList.add("active");
+
+  document.querySelectorAll("nav button").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  button.classList.add("active");
+}
+
+function completeTask(button) {
+  if (button.disabled) return;
+
+  button.textContent = "✓ Completed";
+  button.disabled = true;
+
+  const count = document.getElementById("completed");
+  const points = document.getElementById("points");
+  const balance = document.getElementById("balance");
+
+  const newCount = Number(count.textContent) + 1;
+  count.textContent = newCount;
+
+  const newPoints = Number(points.textContent) + 10;
+  points.textContent = newPoints;
+  balance.textContent = newPoints + " Points";
 }
 </script>
 
